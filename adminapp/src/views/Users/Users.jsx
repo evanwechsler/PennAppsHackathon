@@ -1,10 +1,21 @@
-import { ListItem, ListItemText, List, TextField } from "@material-ui/core";
+import {
+  ListItem,
+  ListItemText,
+  List,
+  TextField,
+  Button,
+  Modal,
+  Fade,
+  Backdrop,
+} from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import NewUserModal from "./components/NewUserModal";
 
 export default function Users() {
   const [users, setUsers] = useState([]);
   const [searchName, setSearchName] = useState("");
+  const [open, setOpen] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -23,20 +34,45 @@ export default function Users() {
 
   return (
     <div>
-      <TextField
-        label="Name"
-        style={{ margin: 8 }}
-        onChange={(e) => setSearchName(e.target.value)}
-        variant="outlined"
-        type="search"
-      />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <TextField
+          label="Name"
+          style={{ margin: 8 }}
+          onChange={(e) => setSearchName(e.target.value)}
+          variant="outlined"
+          type="search"
+          style={{ minWidth: "30%" }}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ height: "fit-content" }}
+          onClick={() => setOpen(true)}
+        >
+          Add User
+        </Button>
+        <NewUserModal setOpen={setOpen} open={open} />
+      </div>
       <List>
         {users &&
-          users.map((user) => (
-            <ListItem button onClick={() => history.push(`/users/${user.id}`)}>
-              <ListItemText primary={user.name} />
-            </ListItem>
-          ))}
+          users
+            .filter((user) =>
+              user.name.toLowerCase().includes(searchName.toLowerCase())
+            )
+            .map((user) => (
+              <ListItem
+                button
+                onClick={() => history.push(`/users/${user.id}`)}
+              >
+                <ListItemText primary={user.name} />
+              </ListItem>
+            ))}
       </List>
     </div>
   );

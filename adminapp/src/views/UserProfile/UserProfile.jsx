@@ -1,11 +1,14 @@
-import { Button } from "@material-ui/core";
+import { Button, Modal, Fade, Backdrop } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import RecordForm from "./components/RecordForm";
 import MyAccordion from "./components/MyAccordion";
+import RecordModal from "./components/RecordModal";
 
 export default function UserProfile() {
   const { id } = useParams();
   const [user, setUser] = useState(null);
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     function getUser() {
       const res = {
@@ -74,7 +77,7 @@ export default function UserProfile() {
             {user && user.name}
           </h1>
           <small style={{ margin: "1rem", fontFamily: "sans-serif" }}>
-            {user && user.dateOfBirth}
+            DoB: {user && user.dateOfBirth}
           </small>
         </div>
         <Button
@@ -85,9 +88,11 @@ export default function UserProfile() {
             alignSelf: "flex-end",
             margin: "1rem",
           }}
+          onClick={() => setOpen(true)}
         >
           Add Record
         </Button>
+        <RecordModal setOpen={setOpen} open={open} />
       </div>
       {user &&
         Object.entries(user.illnesses).map(([illness, records]) => {

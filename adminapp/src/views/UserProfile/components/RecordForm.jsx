@@ -9,7 +9,7 @@ import {
 } from "@material-ui/core";
 import React, { useState } from "react";
 
-export default function Form() {
+export default function RecordForm() {
   const [record, setRecord] = useState({});
 
   const handleSubmit = (e) => {
