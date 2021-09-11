@@ -8,9 +8,6 @@ import {
   InputLabel,
 } from "@material-ui/core";
 import React, { useState } from "react";
-import "../style.css";
-
-const userName = "Jason is a Cunt";
 
 export default function Form() {
   const [record, setRecord] = useState({});
@@ -21,7 +18,6 @@ export default function Form() {
 
   return (
     <>
-      <h1 className="form-header">{userName}</h1>
       <form onSubmit={handleSubmit}>
         <Grid
           container
@@ -128,7 +124,7 @@ export default function Form() {
           <Grid item>
             <Grid container direction="row" spacing={2}>
               <Grid item>
-                <FormControl>
+                <FormControl style={{ minWidth: 120 }}>
                   {/* <InputLabel id="route">Route</InputLabel> */}
                   <TextField
                     value={record.route}
