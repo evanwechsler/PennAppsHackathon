@@ -27,8 +27,6 @@ function RecordsPage(props){
               console.log(records);
               return <AccordionItem illness={illness} records={records} />;
             })
-          
-            //<h1>{user.illnesses}</h1>
           }
         </div>
       );
