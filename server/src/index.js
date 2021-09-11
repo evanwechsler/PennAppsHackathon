@@ -7,6 +7,40 @@ import { collection, getDoc, doc, where, query } from "firebase/firestore"
 import { Web3Storage } from 'web3.storage';
 import { File } from 'web3.storage';
 
+function getAccessToken() {
+    return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweEI1NDc5MUQwQTdiODY4N0YzMDc4QmQ0MTA5YzcwMzQxOTNlNzRlZmIiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2MzEzNzU5NjU3MjIsIm5hbWUiOiJCZWVwQm9vcCJ9.2ZkyKFw3IZ2UItW2HM0utlfuDzsrGol3YNSsRoXSGLU';
+}
+
+function makeStorageClient() {
+    return new Web3Storage({ token: getAccessToken() });
+}
+
+function makeFileObjects(json) {
+    const blob = new Blob([JSON.stringify(obj)], {type: 'application/json'});
+
+    return new File([blob], 'text.json')
+}
+
+async function storeFiles(files) {
+    const client = makeStorageClient()
+    const cid = await client.put(files);
+
+    console.log('stored file with CID: ' + cid);
+
+    return cid;
+}
+
+async function retrieve(cid) {
+    const client = makeStorageClient();
+    const res = await client.get(cid);
+    console.log('Got a response from Web3! ' + res.status + " " + res.statusText);
+    if (!res.ok) {
+        throw new Error('failed to get cid: ' + cid);
+    }
+
+    console.log(res.json());
+}
+
 const app = express();
 
 const firebase = initializeApp({
@@ -38,11 +72,11 @@ const getPerson = async (req, res, next) => {
     console.log(req.query);
     const params = req.query;
     try {
-        const docRef = doc(db, "reference", params['username']);
+        const docRef = doc(db, "reference", params['firstname']);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-            console.log("Doc Data: ", docSnap.data()['username']);
+            console.log("Doc Data: ", docSnap.data()['firstname']);
         }
         res.status(200).send("All good");
     } catch (error) {
@@ -78,7 +112,6 @@ const login = async (req, res, next) => {
     try {
         const referenceRef = collection(db, "reference");
         const q = query(referenceRef, where("username", "==", body['username']), where("password", "==", body['password']));
-
         const querySnapshot = await getDocs(q);
         const found = querySnapshot.map((doc) => doc.data());
         if (found) {
@@ -90,14 +123,15 @@ const login = async (req, res, next) => {
 }
 
 const getAllUsers = async (req, res, next) => {
-    const params = req.query;
     try {
+        console.log('getting all users');
         const referenceRef = collection(db, "reference");
         const q = query(referenceRef, where("username", "!=", 0));
-        const querySnapshot = await getDocs(q);
-        const found = querySnapshot.map((doc) => doc.data()['username']);
+        const querySnapshot = await getDoc(q);
+        const found = querySnapshot.map((doc) => "" + doc.data()['username'] + "--" + doc.id);
         res.status(200).send(found.json());
     } catch (error) {
+        console.log(error);
         res.status(400).send(error.message);
     }
 }
@@ -126,6 +160,7 @@ adminRouter.post('/addperson', addPerson);
 adminRouter.get('/getperson', getPerson);
 adminRouter.post('/createuser', createUser);
 adminRouter.post('/createvaccinerecord', createVaccineRecord);
+adminRouter.get('/getallusers', getAllUsers)
 
 
 app.use('/admin', adminRouter);
