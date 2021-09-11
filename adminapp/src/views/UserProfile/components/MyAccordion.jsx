@@ -19,7 +19,13 @@ export default function MyAccordion({ illness, records }) {
         <Typography className="accordion-header">{illness}</Typography>
       </AccordionSummary>
       {records.map((record) => (
-        <AccordionDetails>
+        <AccordionDetails
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "1rem",
+          }}
+        >
           <Record record={record} />
         </AccordionDetails>
       ))}

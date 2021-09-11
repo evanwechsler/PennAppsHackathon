@@ -1,5 +1,4 @@
 import Container from "@material-ui/core/Container";
-import Form from "./views/UserProfile/components/Form";
 import "./style.css";
 import { IconButton } from "@material-ui/core";
 import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
@@ -12,7 +11,7 @@ function App() {
   return (
     <Container className="App">
       <Router>
-        <IconButton href="/users">
+        <IconButton href="/users" style={{ margin: "1rem" }}>
           <HomeRoundedIcon />
         </IconButton>
         <Switch>
