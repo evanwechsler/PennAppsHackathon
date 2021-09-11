@@ -1,8 +1,12 @@
-const firebase = require('firebase/app');
-const dbGetter = require('firebase/firestore');
+const firebase = require('firebase');
 const config = require('./config');
+require('firebase/firestore');
 
-const db = firebase.initializeApp(config.firebaseConfig);
-const firestore = dbGetter.getFirestore();
+firebase.initializeApp({
+    apiKey: 'AIzaSyC1sv4guvM1piO3mvavt8mtamzpfsPScxc',
+    authDomain: 'pennappsvax.firebaseapp.com',
+    projectId: 'pennappsvax'
+});
 
-module.exports = dbGetter;
+var db = firebase.firestore();
+module.exports = db;

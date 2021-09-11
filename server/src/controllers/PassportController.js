@@ -1,13 +1,12 @@
 'use strict';
 
-const firebase = require('../db');
+const db = require('../db');
 const Passport = require('../models/passport');
-const firestore = firebase.getFirestore();
 
 const addPerson = async (req, res, next) => {
     try {
         const data = req.body;
-        await firestore.collection('reference').doc(data['name']).get().then(doc => {
+        await db.collection('reference').doc(data['name']).get().then(doc => {
             if (doc.exists) {
                 res.status(409).send('User already exists');
             }
@@ -20,7 +19,7 @@ const addPerson = async (req, res, next) => {
 const addVaccination = async (req, res, next) => {
     try {
         const data = req.body;
-        await firestore.collection('reference').doc(data['name']).get().then(doc => {
+        await db.collection('reference').doc(data['name']).get().then(doc => {
             if (!doc.exists) {
                 res.status(404).send('User not found');
             } else {
@@ -33,7 +32,20 @@ const addVaccination = async (req, res, next) => {
     }
 }
 
+const test = async (req, res, next) => {
+    console.log('hello');
+    try {
+        await db.collection('reference').add({
+            name: "Test",
+            password: "testPass"
+        })
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+
 module.exports = {
     addVaccination,
-    addPerson
+    addPerson,
+    test
 }
