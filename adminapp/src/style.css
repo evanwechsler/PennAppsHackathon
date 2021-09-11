@@ -1,0 +1,13 @@
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.field {
+    margin: 1rem 0;
+}
+
+.form-header {
+    text-align: center;
+    font-family: sans-serif;
+}
