@@ -15,4 +15,4 @@ app.use(bodyParser.json())
 app.use('/api', passportRoutes.routes);
 
 
-app.listen(8080, () => console.log('Server is starting on url http://localhost:8080'));
+app.listen(8080, () => console.log('Server is starting on url http://localhost:' + '8080'));
