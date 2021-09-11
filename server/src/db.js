@@ -1,12 +1,10 @@
-const firebase = require('firebase');
-const config = require('./config');
-require('firebase/firestore');
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 
-firebase.initializeApp({
+const firebase = initializeApp({
     apiKey: 'AIzaSyC1sv4guvM1piO3mvavt8mtamzpfsPScxc',
     authDomain: 'pennappsvax.firebaseapp.com',
     projectId: 'pennappsvax'
 });
 
-var db = firebase.firestore();
-module.exports = db;
+export const db = getFirestore();
