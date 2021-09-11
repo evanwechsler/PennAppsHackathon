@@ -44,6 +44,22 @@ const test = async (req, res, next) => {
     }
 }
 
+const getPerson = async (req, res, next) => {
+    console.log('getPerson');
+    try {
+        const data = req.body
+        await db.collection('reference').where('username', '==', data['username']).get().then((querySnapshot) => {
+            if (querySnapshot.size() >= 1) {
+                console.log('found someone');
+            }
+        }).catch((error) => {
+            console.log("Error getting Doc");
+        })
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+
 module.exports = {
     addVaccination,
     addPerson,
