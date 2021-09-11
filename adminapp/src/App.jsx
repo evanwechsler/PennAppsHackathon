@@ -1,5 +1,4 @@
 import Container from "@material-ui/core/Container";
-import Form from "./views/UserProfile/components/Form";
 import "./style.css";
 import { IconButton } from "@material-ui/core";
 import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
