@@ -9,9 +9,9 @@ function LandingPage(props){
     const [userName, setName] = useState('');
     const [password, setPassword] = useState('');
 
-    const submit = (event) => {
-        event.preventDefault();
-        //TODO change 
+    const submit = () => {
+        //TODO change
+        /** 
         fetch('http://localhost:8080/login',
         {
             method: 'POST',
@@ -26,11 +26,63 @@ function LandingPage(props){
                 //set the data from the response and push to
                 //records page
                 response.json().then(data => {
-                    props.setRecords(data);
+                    props.setUser(data);
                     props.history.push(ROUTES.RECORDS);
                 })
             }
         } )
+        */
+        const Bone = {
+            name: "Evan Wechsler",
+            userName: "evan_wechsler",
+            dateOfBirth: "2001-02-18",
+            illnesses: {
+            Covid: [
+                {
+                date: "2021-02-18",
+                agent: "mrna",
+                productName: "moderna",
+                diluentProduct: "dp",
+                lot: "123abc",
+                dosage: 10,
+                route: "Arm",
+                site: "oral",
+                administeredBy: "Dr. Test",
+                authorizedOrganization: "UHN",
+                },
+                {
+                date: "2001-03-20",
+                agent: "mrna",
+                productName: "phizer",
+                diluentProduct: "dp",
+                lot: "123abc",
+                dosage: 10,
+                route: "Arm",
+                site: "oral",
+                administeredBy: "Dr. Test",
+                authorizedOrganization: "UHN",
+                },
+            ],
+            "Small Pox": [
+                {
+                date: "2001-02-18",
+                agent: "mrna",
+                productName: "moderna",
+                diluentProduct: "dp",
+                lot: "123abc",
+                dosage: 10,
+                route: "Arm",
+                site: "oral",
+                administeredBy: "Dr. Test",
+                authorizedOrganization: "UHN",
+                },
+            ],
+            },
+        };
+        props.setUser(Bone);
+        //console.log(props.user)
+        
+        props.history.push(ROUTES.RECORDS);
     }
     return (
         <Box p={5} border={1} width = {1/4} display = "flex" justifyContent="center" flexDirection="column">
