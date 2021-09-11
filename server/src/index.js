@@ -1,15 +1,18 @@
-const express = require("express");
-const cors = require("cors");
+'use strict';
 
-const PORT = 8080;
-const app = new express();
+const express = require('express');
+const cors = require('cors')
+const bodyParser = require('body-parser');
+const config = require('./config');
+const passportRoutes = require('./routes/passport-routes');
 
-app.use(cors({ origin: "*" }));
+const app = express();
 
-app.get("/user", (req, res) => {
-    res.status(200).send("Hello");
-});
+app.use(express.json());
+app.use(cors());
+app.use(bodyParser.json())
 
-app.listen(PORT, () => {
-    console.log(`Express app started on ${PORT}`);
-});
+app.use('/api', passportRoutes.routes);
+
+
+app.listen(8080, () => console.log('Server is starting on url http://localhost:8080'));
