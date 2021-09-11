@@ -3,7 +3,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { collection, getDoc, doc, where, query } from "firebase/firestore"
+import { collection, getDoc, setDoc, doc, where, query } from "firebase/firestore"
 import { Web3Storage } from 'web3.storage';
 import { File } from 'web3.storage';
 
@@ -88,18 +88,21 @@ const createUser = async (req, res, next) => {
     const body = req.body;
     console.log(body);
     try {
-        const result = await db.collection('reference').where('username', '==', body['username']).get()
-        if (result.length) {
-            res.status(400).send("Username already exists");
+        const referenceRef = collection(db, "reference");
+        const q = query(referenceRef, where("username", "==", body['username']));
+        const querySnapshot = await getDoc(q);
+        const found = querySnapshot.map((doc) => doc.data());
+        if (found) {
+            res.status(400).send("Username exists");
         } else {
-            await db.collection('reference').add({
+            await setDoc(doc(db, "reference", body['username']+""+body['fullname']), {
                 name: body['fullName'],
                 username: body['username'],
                 password: body['password'],
                 dateOfBirth: body['dob'],
                 healthCardNumber: body['healthcard']
             });
-            res.status(201).send("User created");
+            res.status(201).send("User Created");
         }
     } catch (error) {
         res.status(400).send(error.message);
@@ -112,7 +115,7 @@ const login = async (req, res, next) => {
     try {
         const referenceRef = collection(db, "reference");
         const q = query(referenceRef, where("username", "==", body['username']), where("password", "==", body['password']));
-        const querySnapshot = await getDocs(q);
+        const querySnapshot = await getDoc(q);
         const found = querySnapshot.map((doc) => doc.data());
         if (found) {
             res.status(200).send('Found a login user');
@@ -141,10 +144,12 @@ const createVaccineRecord = async (req, res, next) => {
     console.log(body);
     try {
         const result = await db.collection('reference/'+body['id']).get();
+        const cid = storeFiles(makeFileObjects(body))
+        console.log(cid);
         if (result.length) {
             await db.collection('reference/'+body['id']+'/illnesses').add({
                 illness: body['illness'],
-                cid: web3cid
+                cid: cid
             });
             res.status(201).send("Record created");
         }
