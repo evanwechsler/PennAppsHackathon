@@ -167,6 +167,8 @@ adminRouter.post('/createuser', createUser);
 adminRouter.post('/createvaccinerecord', createVaccineRecord);
 adminRouter.get('/getallusers', getAllUsers)
 
+userRouter.post('/login', login);
+
 
 app.use('/admin', adminRouter);
 app.use('/user', userRouter);
