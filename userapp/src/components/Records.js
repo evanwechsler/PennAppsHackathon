@@ -1,6 +1,8 @@
 import React from 'react'
 
-const Results = () => {
+
+
+const Results = (props) => {
     return (
     <h1>RESULTS</h1>
     )

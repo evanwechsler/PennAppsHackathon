@@ -4,13 +4,15 @@ import {
     TextField,
     Button
 } from '@material-ui/core'
-const LandingPage = () => {
+import * as ROUTES from '../routes';
+function LandingPage(props){
     const [userName, setName] = useState('');
     const [password, setPassword] = useState('');
 
     const submit = (event) => {
+        event.preventDefault();
         //TODO change 
-        fetch('http://DOMAINTOCHANGE/finduser',
+        fetch('http://localhost:8080/login',
         {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -20,7 +22,13 @@ const LandingPage = () => {
             })
         }).then(function(response){
             if(response.ok){
-                response.json().then(data => )
+                //If there's a record of the user in the database,
+                //set the data from the response and push to
+                //records page
+                response.json().then(data => {
+                    props.setRecords(data);
+                    props.history.push(ROUTES.RECORDS);
+                })
             }
         } )
     }

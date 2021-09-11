@@ -1,2 +1,2 @@
 export const SIGN_UP = '/';
-export const RESULTS = '/results';
+export const RECORDS = '/records';
