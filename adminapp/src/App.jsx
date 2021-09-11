@@ -11,7 +11,7 @@ function App() {
   return (
     <Container className="App">
       <Router>
-        <IconButton href="/users">
+        <IconButton href="/users" style={{ margin: "1rem" }}>
           <HomeRoundedIcon />
         </IconButton>
         <Switch>

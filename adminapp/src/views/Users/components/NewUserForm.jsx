@@ -6,8 +6,9 @@ export default function NewUserForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const fieldWidth = "30%";
   return (
-    <form style={{ display: "flex", flexDirection: "column" }}>
+    <form style={{ display: "flex", flexDirection: "column", width: "auto" }}>
       <TextField
         label="Full Name"
         onChange={(e) => setName(e.target.value)}
@@ -32,6 +33,9 @@ export default function NewUserForm() {
         variant="outlined"
         style={{ margin: "0.5rem" }}
       />
+      {confirmPassword.length > 1 && confirmPassword !== password && (
+        <p style={{ color: "red", margin: "1rem" }}>Passwords do not match</p>
+      )}
       <Button variant="contained" color="primary">
         Create User
       </Button>
