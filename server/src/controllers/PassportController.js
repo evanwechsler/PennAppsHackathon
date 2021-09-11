@@ -38,7 +38,7 @@ const test = async (req, res, next) => {
         await db.collection('reference').add({
             name: "Test",
             password: "testPass"
-        })
+        });
     } catch (error) {
         res.status(400).send(error.message);
     }
