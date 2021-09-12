@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { collection, getDoc, setDoc, doc, where, query, getDocs, addDoc } from "firebase/firestore"
-import { Web3Storage } from 'web3.storage';
+import { Blob, Web3Storage } from 'web3.storage';
 import { File } from 'web3.storage';
 
 function getAccessToken() {
@@ -15,9 +15,13 @@ function makeStorageClient() {
     return new Web3Storage({ token: getAccessToken() });
 }
 
-function makeFileObjects(json) {
-    const buffer = Buffer.from(JSON.stringify(json));
-    return [new File(buffer, 'text.json')];
+async function makeFileObjects(json) {
+
+
+    const blob = new Blob([json], {type : 'application/json'});
+    const text = await blob.text();
+    console.log(text)
+    return [new File([blob], 'text.json')];
 }
 
 async function storeFiles(files) {
@@ -33,11 +37,15 @@ async function retrieve(cid) {
     const client = makeStorageClient();
     const res = await client.get(cid);
     console.log('Got a response from Web3! ' + res.status + " " + res.statusText);
+    const files = await res.files();
+    for (const file of files) {
+        console.log(JSON.stringify(await file.text()));
+    }
     if (!res.ok) {
         throw new Error('failed to get cid: ' + cid);
     }
 
-    console.log(res.json());
+    // console.log(res.json());
 }
 
 const app = express();
@@ -57,15 +65,29 @@ app.use(bodyParser.json())
 const getPerson = async (req, res, next) => {
     console.log(req.query);
     const params = req.query;
+    const responseData = {};
     try {
-        const docRef = doc(db, "reference", params['firstname']);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-            console.log("Doc Data: ", docSnap.data()['firstname']);
+        const referenceRef = collection(db, "reference");
+        const q = query(referenceRef, where("username", "==", params['username']));
+        const querySnapshot = await getDocs(q);
+        const arr = [];
+        querySnapshot.forEach((doc) => arr.push(doc.data()));
+        if (arr.length > 0) {
+            responseData['dob'] = arr[0]['dateOfBirth'];
+            responseData['healthCardNumber'] = arr[0]['healthCardNumber'];
+            responseData['fullname'] = arr[0]['name'];
+        } else {
+            res.status(400).send("Not found");
         }
-        res.status(200).send("All good");
+        const docRef = await getDocs(collection(db, "reference", params['id'], "illnesses"));
+        docRef.forEach(async (doc) => {
+            const cid = doc.data()['cid'];
+            console.log("FILE CID FROM FIREBASE: " + cid);
+            responseData[doc.data()['illness']] = await retrieve(doc.data()['cid']);
+        })
+        res.status(200).send(JSON.stringify(responseData));
     } catch (error) {
+        console.log(error);
         res.status(400).send(error.message);
     }
 }
@@ -133,10 +155,10 @@ const getAllUsers = async (req, res, next) => {
 
 const createVaccineRecord = async (req, res, next) => {
     const body = req.body;
-    console.log(body);
+    const payload = JSON.stringify(body);
 
     try {
-        const cid = await storeFiles(makeFileObjects(body))
+        const cid = await storeFiles(makeFileObjects(payload));
         console.log(cid);
         const docRef = await addDoc(collection(db, "reference", body['id'], "illnesses"), {
             illness: body['illness'],
