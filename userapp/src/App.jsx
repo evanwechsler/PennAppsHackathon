@@ -10,7 +10,7 @@ import { BrowserRouter as Router,
 function App() {
   const [user, setUser] = useState(null);
   return (
-    <div id="app" style={{display: "grid", placeItems: "center", height: "100vh", backgroundImage: `url(${background})`}}>
+    <div id="app" style={{ display: "grid", placeItems: "center", backgroundImage: `url(${background})`}}>
       <Router>
         <Route exact path = {ROUTES.SIGN_UP} render={(props) => (
         <LandingPage {... props} setUser={setUser} user={user}/>
