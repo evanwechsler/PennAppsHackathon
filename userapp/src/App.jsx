@@ -5,6 +5,7 @@ import LandingPage from './components/LandingPage'
 import RecordsPage from './components/RecordsPage'
 import { BrowserRouter as Router,
   Route } from 'react-router-dom';
+  import "./style.css"
 
 function App() {
   const [user, setUser] = useState(null);

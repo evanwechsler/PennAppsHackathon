@@ -1,0 +1,21 @@
+:root {
+    --background-color: #001219;
+    --accent-color: hsl(172,73%,35%)
+}
+
+body{
+    background-color: var(--background-color);
+    font-family: sans-serif;
+}
+
+.box {
+    background-color: white;
+}
+
+h1 {
+    color: var(--accent-color)
+}
+
+.titlecard{
+    margin: 0;
+}

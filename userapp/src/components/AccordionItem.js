@@ -10,17 +10,22 @@ import Record from "./Record";
 
 const AccordionItem = (props) => {
     return (
-        <Accordion style={{ margin: "1rem" }}>
+        <Accordion style={{ margin: "1rem"}}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography className="accordion-header">{props.illness}</Typography>
+          <Typography variant="subtitle1" className="accordion-header">{props.illness}</Typography>
         </AccordionSummary>
         
         {props.records.map((record) => (
-          <AccordionDetails>
+          <AccordionDetails
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "1rem",
+          }}>
             <Record record={record} />
           </AccordionDetails>
         ))}

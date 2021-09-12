@@ -2,13 +2,14 @@ import React, {useState} from 'react';
 import Box from '@material-ui/core/Box';
 import {
     TextField,
-    Button
+    Button,
+    Typography
 } from '@material-ui/core'
 import * as ROUTES from '../routes';
 function LandingPage(props){
     const [userName, setName] = useState('');
     const [password, setPassword] = useState('');
-
+    
     const submit = () => {
         //TODO change
         /** 
@@ -85,14 +86,20 @@ function LandingPage(props){
         props.history.push(ROUTES.RECORDS);
     }
     return (
-        <Box p={5} border={1} width = {1/4} display = "flex" justifyContent="center" flexDirection="column">
-            <h1>Enter Information</h1>
-            <TextField label="Name" variant='outlined' onChange = {e => setName(e.target.value)}></TextField>
-            <br/>
-            <TextField label="password" variant ='outlined' onChange = {e => setPassword(e.target.value)}></TextField>
-            <br/>
-            <Button variant='contained' color='primary' onClick={submit}>Submit</Button>
-        </Box>
+        <React.Fragment>
+            <Typography style={{ fontSize: 160}}variant="h1">MedRecs</Typography>
+            <Box borderRadius="15px" className = "box" p={5} border={1} width = {1/4} display = "flex" justifyContent="center" flexDirection="column">
+                <h1>Sign In</h1>
+                <TextField label="Name" variant='outlined' onChange = {e => setName(e.target.value)}></TextField>
+                <br/>
+                <TextField type="password" label="password" variant ='outlined' onChange = {e => setPassword(e.target.value)}></TextField>
+                <br/>
+                <Button variant='contained' color='primary' onClick={submit}>Submit</Button>
+            </Box>
+        </React.Fragment>
+
+        
+        
 
     )
 }
