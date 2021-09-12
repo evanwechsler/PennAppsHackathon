@@ -77,7 +77,9 @@ export default function UserProfile() {
             {user && user.name}
           </h1>
           <small style={{ margin: "1rem", fontFamily: "sans-serif" }}>
-            DoB: {user && user.dateOfBirth}
+            <strong style={{ color: "white" }}>
+              DoB: {user && user.dateOfBirth}
+            </strong>
           </small>
         </div>
         <Button

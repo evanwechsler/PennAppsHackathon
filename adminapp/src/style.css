@@ -1,6 +1,33 @@
+:root {
+    --bg-color: #001219;
+    --accent-color: #2a9d8f;
+    --accent-color2: #e76f51;
+    --light-blue: #caf0f8;
+}
+
+body {
+    height: 100vh;
+    margin: 0;
+}
+
+#app {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    max-height: 100%;
+}
+
+h1 {
+    color: var(--light-blue);
+}
+
 form {
     display: flex;
     flex-direction: column;
+}
+
+.accordion {
+    background: var(--light-blue) !important;
 }
 
 .field {
@@ -14,4 +41,24 @@ form {
 
 * {
     font-family: sans-serif;
+}
+
+.MuiButton-root {
+    background: var(--accent-color2) !important;
+}
+
+.MuiButton-label {
+    color: white;
+}
+
+.text-field {
+    margin: 0.3rem;
+}
+
+a.home {
+    background-color: var(--accent-color2);
+}
+
+.home>span>svg>path {
+    color: white;
 }

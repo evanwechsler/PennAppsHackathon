@@ -45,15 +45,14 @@ export default function Users() {
           label="Name"
           style={{ margin: 8 }}
           onChange={(e) => setSearchName(e.target.value)}
-          variant="outlined"
           type="search"
-          style={{ minWidth: "30%" }}
+          style={{ minWidth: "30%", borderRadius: "10px", margin: "0.5rem" }}
         />
         <Button
           variant="contained"
-          color="primary"
           style={{ height: "fit-content" }}
           onClick={() => setOpen(true)}
+          className="MuiButton-root"
         >
           Add User
         </Button>
@@ -69,6 +68,12 @@ export default function Users() {
               <ListItem
                 button
                 onClick={() => history.push(`/users/${user.id}`)}
+                style={{
+                  backgroundColor: "white",
+                  borderRadius: "10px",
+                  margin: "0.5rem",
+                }}
+                className="accordion"
               >
                 <ListItemText primary={user.name} />
               </ListItem>

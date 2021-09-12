@@ -7,10 +7,14 @@ import {
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Record from "./Record";
+import "../../../style.css";
 export default function MyAccordion({ illness, records }) {
   useEffect(() => console.log(records), []);
   return (
-    <Accordion style={{ margin: "1rem" }}>
+    <Accordion
+      style={{ margin: "1rem", borderRadius: "10px" }}
+      className="accordion"
+    >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
