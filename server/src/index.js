@@ -1,9 +1,9 @@
-import express from 'express';
+import express, { response } from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { collection, getDoc, setDoc, doc, where, query } from "firebase/firestore"
+import { collection, getDoc, setDoc, doc, where, query, getDocs, addDoc } from "firebase/firestore"
 import { Web3Storage } from 'web3.storage';
 import { File } from 'web3.storage';
 
@@ -15,10 +15,11 @@ function makeStorageClient() {
     return new Web3Storage({ token: getAccessToken() });
 }
 
-function makeFileObjects(json) {
-    const blob = new Blob([JSON.stringify(obj)], {type: 'application/json'});
+function makeFileObjects(obj) {
+    const buffer = Buffer.from(JSON.stringify(obj));
 
-    return new File([blob], 'text.json')
+    const files = [new File([buffer], 'text.json')]
+    return files;
 }
 
 async function storeFiles(files) {
@@ -34,11 +35,17 @@ async function retrieve(cid) {
     const client = makeStorageClient();
     const res = await client.get(cid);
     console.log('Got a response from Web3! ' + res.status + " " + res.statusText);
+    const files = await res.files();
+    for (const file of files) {
+        const text = await file.text();
+        // console.log(text);
+        return text;
+    }
     if (!res.ok) {
         throw new Error('failed to get cid: ' + cid);
     }
 
-    console.log(res.json());
+    // console.log(res.json());
 }
 
 const app = express();
@@ -55,47 +62,58 @@ app.use(express.json());
 app.use(cors());
 app.use(bodyParser.json())
 
-const addPerson = async (req, res, next) => {
-    try {
-        const data = req.body;
-        await db.collection('reference').doc(data['name']).get().then(doc => {
-            if (doc.exists) {
-                res.status(409).send('User already exists');
-            }
-        })
-    } catch (error) {
-        res.status(400).send(error.message);
-    }
-}
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
 
 const getPerson = async (req, res, next) => {
     console.log(req.query);
     const params = req.query;
+    const responseData = [];
     try {
-        const docRef = doc(db, "reference", params['firstname']);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-            console.log("Doc Data: ", docSnap.data()['firstname']);
+        const referenceRef = collection(db, "reference");
+        const q = query(referenceRef, where("username", "==", params['username']));
+        const querySnapshot = await getDocs(q);
+        const arr = [];
+        querySnapshot.forEach((doc) => arr.push(doc.data()));
+        if (arr.length > 0) {
+            responseData.push(arr[0]['dateOfBirth']);
+            responseData.push(arr[0]['healthCardNumber']);
+            responseData.push(arr[0]['name']);
+        } else {
+            res.status(400).send("Not found");
         }
-        res.status(200).send("All good");
+        const docRef = await getDocs(collection(db, "reference", params['id'], "illnesses"));
+        docRef.forEach(async (doc) => {
+            const cid = doc.data()['cid'];
+            console.log("FILE CID FROM FIREBASE: " + cid);
+            const data = await retrieve(doc.data()['cid']);
+            console.log(data)
+            responseData.push(data);
+        })
+        await sleep(500)
+        console.log(responseData);
+        res.send(responseData);
     } catch (error) {
+        console.log(error);
         res.status(400).send(error.message);
     }
 }
 
 const createUser = async (req, res, next) => {
     const body = req.body;
-    console.log(body);
     try {
         const referenceRef = collection(db, "reference");
         const q = query(referenceRef, where("username", "==", body['username']));
-        const querySnapshot = await getDoc(q);
-        const found = querySnapshot.map((doc) => doc.data());
-        if (found) {
-            res.status(400).send("Username exists");
+        const querySnapshot = await getDocs(q);
+        const arr = [];
+        querySnapshot.forEach((doc) => arr.push(doc.data()));
+        if (arr.length > 0) {
+            res.status(400).send("Username exists already");
+            console.log(arr);
         } else {
-            await setDoc(doc(db, "reference", body['username']+""+body['fullname']), {
+            await setDoc(doc(db, "reference", body['username'] + "" + body['fullName']), {
                 name: body['fullName'],
                 username: body['username'],
                 password: body['password'],
@@ -115,13 +133,17 @@ const login = async (req, res, next) => {
     try {
         const referenceRef = collection(db, "reference");
         const q = query(referenceRef, where("username", "==", body['username']), where("password", "==", body['password']));
-        const querySnapshot = await getDoc(q);
-        const found = querySnapshot.map((doc) => doc.data());
-        if (found) {
+        const querySnapshot = await getDocs(q);
+        const arr = [];
+        querySnapshot.forEach((doc) => arr.push(doc.data()));
+        if (arr.length > 0) {
             res.status(200).send('Found a login user');
+        } else {
+            res.status(400).send('No user found');
         }
     } catch (error) {
         res.status(400).send(error.message);
+        console.log(error);
     }
 }
 
@@ -130,9 +152,10 @@ const getAllUsers = async (req, res, next) => {
         console.log('getting all users');
         const referenceRef = collection(db, "reference");
         const q = query(referenceRef, where("username", "!=", 0));
-        const querySnapshot = await getDoc(q);
-        const found = querySnapshot.map((doc) => "" + doc.data()['username'] + "--" + doc.id);
-        res.status(200).send(found.json());
+        const querySnapshot = await getDocs(q);
+        const arr = [];
+        querySnapshot.forEach((doc) => arr.push([doc.data()['username'], doc.id]));
+        res.status(200).send(JSON.stringify(arr));
     } catch (error) {
         console.log(error);
         res.status(400).send(error.message);
@@ -141,35 +164,33 @@ const getAllUsers = async (req, res, next) => {
 
 const createVaccineRecord = async (req, res, next) => {
     const body = req.body;
-    console.log(body);
+
     try {
-        const result = await db.collection('reference/'+body['id']).get();
-        const cid = storeFiles(makeFileObjects(body))
+        const cid = await storeFiles(makeFileObjects(body));
         console.log(cid);
-        if (result.length) {
-            await db.collection('reference/'+body['id']+'/illnesses').add({
-                illness: body['illness'],
-                cid: cid
-            });
-            res.status(201).send("Record created");
-        }
+        const docRef = await addDoc(collection(db, "reference", body['id'], "illnesses"), {
+            illness: body['illness'],
+            cid: cid
+        });
+        console.log('Added document with ID: ' + docRef.id);
+        res.status(201).send("All g");
     } catch (error) {
         res.status(400).send(error.message);
+        console.log(error);
     }
 }
 
 const adminRouter = express.Router();
-const userRouter = express.Router();
 
-adminRouter.post('/addperson', addPerson);
 adminRouter.get('/getperson', getPerson);
 adminRouter.post('/createuser', createUser);
 adminRouter.post('/createvaccinerecord', createVaccineRecord);
 adminRouter.get('/getallusers', getAllUsers)
 
+adminRouter.post('/login', login);
 
-app.use('/admin', adminRouter);
-app.use('/user', userRouter);
+
+app.use('/api', adminRouter);
 
 
 app.listen(8080, () => console.log('Server is starting on url http://localhost:' + '8080'));
