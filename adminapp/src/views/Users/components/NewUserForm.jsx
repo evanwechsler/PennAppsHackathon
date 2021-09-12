@@ -29,6 +29,7 @@ export default function NewUserForm() {
         variant="outlined"
         style={{ margin: "0.5rem" }}
         className="text-field"
+        type="password"
       />
       <TextField
         label="Confirm Password"
@@ -36,6 +37,7 @@ export default function NewUserForm() {
         variant="outlined"
         style={{ margin: "0.5rem" }}
         className="text-field"
+        type="password"
       />
       {confirmPassword.length > 1 && confirmPassword !== password && (
         <p style={{ color: "red", margin: "1rem" }}>Passwords do not match</p>
