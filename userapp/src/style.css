@@ -1,15 +1,10 @@
 :root {
     --background-color: #001219;
-    --accent-color: hsl(172,73%,35%)
-}
-
-body{
-    background-color: var(--background-color);
-    font-family: sans-serif;
+    --accent-color: #caf0f8;
 }
 
 .box {
-    background-color: white;
+    background-color:var(--accent-color)!important;
 }
 
 h1 {
@@ -18,4 +13,21 @@ h1 {
 
 .titlecard{
     margin: 0;
+}
+
+body {
+    height: 100vh;
+    margin: 0;
+    font-family: sans-serif;;
+}
+
+#app {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    max-height: 100%;
+}
+
+.Sign {
+    color: #e76f51
 }

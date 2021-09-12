@@ -87,14 +87,14 @@ function LandingPage(props){
     }
     return (
         <React.Fragment>
-            <Typography style={{ fontSize: 160}}variant="h1">MedRecs</Typography>
+            <Typography style={{ fontSize: 160}}variant="h1">VaxBlox</Typography>
             <Box borderRadius="15px" className = "box" p={5} border={1} width = {1/4} display = "flex" justifyContent="center" flexDirection="column">
-                <h1>Sign In</h1>
+                <h1 className="Sign">Sign In</h1>
                 <TextField label="Name" variant='outlined' onChange = {e => setName(e.target.value)}></TextField>
                 <br/>
                 <TextField type="password" label="password" variant ='outlined' onChange = {e => setPassword(e.target.value)}></TextField>
                 <br/>
-                <Button variant='contained' color='primary' onClick={submit}>Submit</Button>
+                <Button variant='contained' style={{background:"#e76f51", color:"white"}} onClick={submit}>Submit</Button>
             </Box>
         </React.Fragment>
 

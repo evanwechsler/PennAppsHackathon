@@ -22,6 +22,7 @@ const AccordionItem = (props) => {
         {props.records.map((record) => (
           <AccordionDetails
           style={{
+            width: "100%",
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
             gap: "1rem",
