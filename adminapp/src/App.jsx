@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Users from "./views/Users/Users";
 import UserProfile from "./views/UserProfile/UserProfile";
 import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
-import background from "./wavey-fingerprint.svg";
+import background from "./simple-shiny.svg";
 
 function App() {
   return (

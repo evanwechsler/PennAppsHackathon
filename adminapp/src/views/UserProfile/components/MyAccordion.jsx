@@ -10,7 +10,7 @@ import Record from "./Record";
 export default function MyAccordion({ illness, records }) {
   useEffect(() => console.log(records), []);
   return (
-    <Accordion style={{ margin: "1rem" }}>
+    <Accordion style={{ margin: "1rem", borderRadius: "10px" }}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
