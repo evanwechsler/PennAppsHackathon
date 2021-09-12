@@ -42,6 +42,7 @@ export default function RecordForm() {
                     onChange={(e) =>
                       setRecord({ ...record, agent: e.target.value })
                     }
+                    className="text-field"
                   />
                 </FormControl>
               </Grid>
@@ -54,6 +55,7 @@ export default function RecordForm() {
                     onChange={(e) =>
                       setRecord({ ...record, productName: e.target.value })
                     }
+                    className="text-field"
                   />
                 </FormControl>
               </Grid>
@@ -67,6 +69,7 @@ export default function RecordForm() {
                     onChange={(e) =>
                       setRecord({ ...record, dateAdministered: e.target.value })
                     }
+                    className="text-field"
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -91,6 +94,7 @@ export default function RecordForm() {
                     onChange={(e) =>
                       setRecord({ ...record, diluentProduct: e.target.value })
                     }
+                    className="text-field"
                   />
                 </FormControl>
               </Grid>
@@ -103,6 +107,7 @@ export default function RecordForm() {
                     onChange={(e) =>
                       setRecord({ ...record, lot: e.target.value })
                     }
+                    className="text-field"
                   />
                 </FormControl>
               </Grid>
@@ -116,6 +121,7 @@ export default function RecordForm() {
                     onChange={(e) =>
                       setRecord({ ...record, dosage: e.target.value })
                     }
+                    className="text-field"
                   />
                 </FormControl>
               </Grid>
@@ -131,6 +137,7 @@ export default function RecordForm() {
                     onChange={(e) =>
                       setRecord({ ...record, record: e.target.value })
                     }
+                    className="text-field"
                     label="Route"
                     select
                     variant="outlined"
@@ -148,6 +155,7 @@ export default function RecordForm() {
                     className="field"
                     label="Site"
                     variant="outlined"
+                    className="text-field"
                   />
                 </FormControl>
               </Grid>
@@ -161,6 +169,7 @@ export default function RecordForm() {
                     className="field"
                     label="Administered By"
                     variant="outlined"
+                    className="text-field"
                   />
                 </FormControl>
               </Grid>
@@ -170,6 +179,7 @@ export default function RecordForm() {
                     className="field"
                     label="Authorized Organized"
                     variant="outlined"
+                    className="text-field"
                   />
                 </FormControl>
               </Grid>

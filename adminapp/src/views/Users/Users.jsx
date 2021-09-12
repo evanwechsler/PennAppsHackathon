@@ -41,19 +41,29 @@ export default function Users() {
           alignItems: "center",
         }}
       >
-        <TextField
-          label="Name"
-          style={{ margin: 8 }}
-          onChange={(e) => setSearchName(e.target.value)}
-          variant="outlined"
-          type="search"
-          style={{ minWidth: "30%" }}
-        />
+        <div
+          style={{
+            padding: "0.3rem",
+            backgroundColor: "white",
+            borderRadius: "10px",
+            margin: "0 0.5rem",
+          }}
+        >
+          <TextField
+            label="Name"
+            style={{ margin: 8 }}
+            onChange={(e) => setSearchName(e.target.value)}
+            variant="outlined"
+            type="search"
+            style={{ minWidth: "30%", borderRadius: "10px" }}
+            className="text-field"
+          />
+        </div>
         <Button
           variant="contained"
-          color="primary"
           style={{ height: "fit-content" }}
           onClick={() => setOpen(true)}
+          className="MuiButton-root"
         >
           Add User
         </Button>
@@ -69,6 +79,11 @@ export default function Users() {
               <ListItem
                 button
                 onClick={() => history.push(`/users/${user.id}`)}
+                style={{
+                  backgroundColor: "white",
+                  borderRadius: "10px",
+                  margin: "0.5rem",
+                }}
               >
                 <ListItemText primary={user.name} />
               </ListItem>

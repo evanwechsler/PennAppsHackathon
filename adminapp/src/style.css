@@ -1,3 +1,19 @@
+:root {
+    --bg-color: #001219;
+    --accent-color: #2a9d8f;
+    --accent-color2: #e76f51;
+}
+
+#app {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+
+h1 {
+    color: var(--accent-color);
+}
+
 form {
     display: flex;
     flex-direction: column;
@@ -14,4 +30,24 @@ form {
 
 * {
     font-family: sans-serif;
+}
+
+.MuiButton-root {
+    background: var(--accent-color2) !important;
+}
+
+.MuiButton-label {
+    color: white;
+}
+
+.text-field {
+    background-color: white;
+}
+
+a.home {
+    background-color: var(--accent-color2);
+}
+
+.home>span>svg>path {
+    color: white;
 }

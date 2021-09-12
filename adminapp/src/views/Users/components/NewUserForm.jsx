@@ -14,24 +14,28 @@ export default function NewUserForm() {
         onChange={(e) => setName(e.target.value)}
         variant="outlined"
         style={{ margin: "0.5rem" }}
+        className="text-field"
       />
       <TextField
         label="Username"
         onChange={(e) => setUsername(e.target.value)}
         variant="outlined"
         style={{ margin: "0.5rem" }}
+        className="text-field"
       />
       <TextField
         label="Password"
         onChange={(e) => setPassword(e.target.value)}
         variant="outlined"
         style={{ margin: "0.5rem" }}
+        className="text-field"
       />
       <TextField
         label="Confirm Password"
         onChange={(e) => setConfirmPassword(e.target.value)}
         variant="outlined"
         style={{ margin: "0.5rem" }}
+        className="text-field"
       />
       {confirmPassword.length > 1 && confirmPassword !== password && (
         <p style={{ color: "red", margin: "1rem" }}>Passwords do not match</p>
