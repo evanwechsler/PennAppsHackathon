@@ -2,6 +2,7 @@
     --bg-color: #001219;
     --accent-color: #2a9d8f;
     --accent-color2: #e76f51;
+    --light-blue: #caf0f8;
 }
 
 body {
@@ -16,12 +17,16 @@ body {
 }
 
 h1 {
-    color: #caf0f8;
+    color: var(--light-blue);
 }
 
 form {
     display: flex;
     flex-direction: column;
+}
+
+.accordion {
+    background: var(--light-blue) !important;
 }
 
 .field {
@@ -46,7 +51,7 @@ form {
 }
 
 .text-field {
-    background-color: white;
+    margin: 0.3rem;
 }
 
 a.home {

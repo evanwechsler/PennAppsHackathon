@@ -41,24 +41,13 @@ export default function Users() {
           alignItems: "center",
         }}
       >
-        <div
-          style={{
-            padding: "0.3rem",
-            backgroundColor: "white",
-            borderRadius: "10px",
-            margin: "0 0.5rem",
-          }}
-        >
-          <TextField
-            label="Name"
-            style={{ margin: 8 }}
-            onChange={(e) => setSearchName(e.target.value)}
-            variant="outlined"
-            type="search"
-            style={{ minWidth: "30%", borderRadius: "10px" }}
-            className="text-field"
-          />
-        </div>
+        <TextField
+          label="Name"
+          style={{ margin: 8 }}
+          onChange={(e) => setSearchName(e.target.value)}
+          type="search"
+          style={{ minWidth: "30%", borderRadius: "10px", margin: "0.5rem" }}
+        />
         <Button
           variant="contained"
           style={{ height: "fit-content" }}
@@ -84,6 +73,7 @@ export default function Users() {
                   borderRadius: "10px",
                   margin: "0.5rem",
                 }}
+                className="accordion"
               >
                 <ListItemText primary={user.name} />
               </ListItem>
