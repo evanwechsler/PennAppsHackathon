@@ -138,7 +138,7 @@ const login = async (req, res, next) => {
         querySnapshot.forEach((doc) => arr.push([doc.data(), doc.id]));
         if (arr.length > 0) {
             console.log(arr[0]['id'])
-            res.status(200).send(arr[0][1]);
+            res.status(200).send(JSON.parse('{ "id": "'+ arr[0][1] + '" }'));
         } else {
             res.status(400).send('No user found');
         }
