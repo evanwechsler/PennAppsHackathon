@@ -20,7 +20,12 @@ export default function MyAccordion({ illness, records }) {
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
-        <Typography className="accordion-header">{illness}</Typography>
+        <Typography
+          className="accordion-header"
+          style={{ marginLeft: "0.5rem" }}
+        >
+          <strong>{illness}</strong>
+        </Typography>
       </AccordionSummary>
       {records.map((record) => (
         <AccordionDetails
