@@ -3,7 +3,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { collection, getDoc, setDoc, doc, where, query, getDocs, addDoc } from "firebase/firestore"
+import { collection, getDoc, setDoc, doc, where, query, getDocs, updateDoc, arrayUnion } from "firebase/firestore"
 import { Web3Storage } from 'web3.storage';
 import { File } from 'web3.storage';
 
@@ -169,11 +169,20 @@ const createVaccineRecord = async (req, res, next) => {
     try {
         const cid = await storeFiles(makeFileObjects(body));
         console.log(cid);
-        const docRef = await addDoc(collection(db, "reference", body['id'], "illnesses"), {
-            illness: body['illness'],
-            cid: cid
-        });
-        console.log('Added document with ID: ' + docRef.id);
+        const docRef = doc(db, "reference", body['id'], "illnesses", body['illness']);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            await updateDoc(docRef, {
+                cid: arrayUnion(cid)
+            });
+        } else {
+            const arr = [];
+            arr.push(cid);
+            await setDoc(doc(db, "reference", body['id'], "illnesses", body['illness']), {
+                illness: body['illness'],
+                cid: arr
+            });
+        }
         res.status(201).send("All g");
     } catch (error) {
         res.status(400).send(error.message);
