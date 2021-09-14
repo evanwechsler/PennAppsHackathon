@@ -38,8 +38,7 @@ async function retrieve(cid) {
     const files = await res.files();
     for (const file of files) {
         const text = await file.text();
-        // console.log(text);
-        return text;
+        return JSON.parse(text);
     }
     if (!res.ok) {
         throw new Error('failed to get cid: ' + cid);
@@ -64,38 +63,39 @@ app.use(bodyParser.json())
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
+}
 
 const getPerson = async (req, res, next) => {
     console.log(req.query);
     const params = req.query;
-    const responseData = [];
+    const responseData = {};
+
     try {
-        const referenceRef = collection(db, "reference");
+        var referenceRef = collection(db, "reference");
         const q = query(referenceRef, where("username", "==", params['username']));
         const querySnapshot = await getDocs(q);
         const arr = [];
         querySnapshot.forEach((doc) => arr.push(doc.data()));
         if (arr.length > 0) {
-            responseData.push(arr[0]['dateOfBirth']);
-            responseData.push(arr[0]['healthCardNumber']);
-            responseData.push(arr[0]['name']);
-        } else {
-            res.status(400).send("Not found");
+            responseData['name'] = arr[0]['name'];
+            responseData['userName'] = arr[0]['username'];
+            responseData['dateOfBirth'] = arr[0]['dateOfBirth'];
+            responseData['illnesses'] = [];
         }
         const docRef = await getDocs(collection(db, "reference", params['id'], "illnesses"));
+        var illnessVaccination = {};
         docRef.forEach(async (doc) => {
-            const cid = doc.data()['cid'];
-            console.log("FILE CID FROM FIREBASE: " + cid);
-            const data = await retrieve(doc.data()['cid']);
-            console.log(data)
-            responseData.push(data);
+            illnessVaccination[doc.data()['illness']] = [];
+            const cids = doc.data()['cid'];
+            cids.forEach(async (cid) => {
+                illnessVaccination[doc.data()['illness']].push(await retrieve(cid));
+            })
+            responseData['illnesses'].push(illnessVaccination);
         })
-        await sleep(500)
-        console.log(responseData);
-        res.send(responseData);
-    } catch (error) {
+        await sleep(500);
+        console.log(responseData)
+        res.status(200).send(responseData);
+    } catch(error) {
         console.log(error);
         res.status(400).send(error.message);
     }
@@ -148,15 +148,15 @@ const login = async (req, res, next) => {
     }
 }
 
-const getAllUsers = async (req, res, next) => {
+const getAllUsers = async (req, res, next) =>  {
     try {
         console.log('getting all users');
+        var users = [];
         const referenceRef = collection(db, "reference");
         const q = query(referenceRef, where("username", "!=", 0));
         const querySnapshot = await getDocs(q);
-        const arr = [];
-        querySnapshot.forEach((doc) => arr.push([doc.data()['username'], doc.id]));
-        res.status(200).send(JSON.stringify(arr));
+        querySnapshot.forEach((doc) => users.push({ "name": doc.data()['username'], "id": doc.id}))
+        res.status(200).send(JSON.stringify(users));
     } catch (error) {
         console.log(error);
         res.status(400).send(error.message);
