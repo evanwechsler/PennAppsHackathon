@@ -150,12 +150,9 @@ const login = async (req, res, next) => {
 
 const getAllUsers = async (req, res, next) =>  {
     try {
-        console.log('getting all users');
         var users = [];
-        const referenceRef = collection(db, "reference");
-        const q = query(referenceRef, where("username", "!=", 0));
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => users.push({ "name": doc.data()['username'], "id": doc.id}))
+        const snapShot = await getDocs(collection(db, "reference"));
+        snapShot.forEach((doc) => users.push({"name": doc.data()['username'], "id": doc.id}));
         res.status(200).send(JSON.stringify(users));
     } catch (error) {
         console.log(error);
